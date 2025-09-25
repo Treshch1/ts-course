@@ -8,7 +8,6 @@ const stringsArray = ['Hello', 'World'];
 const concatString = stringsArray.concat('!');
 console.log(concatString);
 
-
 // Map method
 const numbersArray = [1, 2, 3, 4, 5];
 const multipliedNumbers = numbersArray.map((num) => num ** 2);
@@ -24,13 +23,20 @@ const unsortedArray = [5, 3, 8, 1, 4];
 const sortedArray = unsortedArray.sort((a, b) => a - b);
 console.log(sortedArray);
 
-// [...arr1, ...arr2] syntax
+// [...arr1, ...arr2]
 const array1 = [1, 2, 3];
 const array2 = [4, 5, 6];
 const combinedArray = [...array1, ...array2];
 console.log(combinedArray);
 
 // Map method
-const randomArray = [10, "Sting", true, 42, "Another String"];
+const randomArray = [10, 'Sting', true, 42, 'Another String'];
 const typesArray = randomArray.map((item) => typeof item);
 console.log(typesArray);
+
+// Array management
+const fruits = ['apple', 'banana', 'cherry'];
+fruits.push('date');
+console.log(fruits);
+fruits.pop();
+console.log(fruits);
