@@ -1,10 +1,8 @@
-# Lesson 3
-This folder contains the following files:
-- `logical.js`: Contains examples of logical operators and their usage in JavaScript.
-- `conditional.js`: Demonstrates the use of conditional statements like if-else and switch.
-- `decision-tree.js`: Combines logical operators and conditional statements to create a simple decision-making structure.
-- `switch.js`: Illustrates the use of the switch statement for multiple conditions.
-
+# Lesson 4
+This folder contains the following files in `src` directory:
+- `arrays.js`: Contains examples of array operations, including creation, manipulation, and iteration.
+- `objects.js`: Demonstrates the use of objects in JavaScript, including nested objects and methods.
+- `loops.js`: Counting using the for loop
 
 ## Getting Started
 To install the necessary dependencies, run:
@@ -12,7 +10,7 @@ To install the necessary dependencies, run:
 npm i
 ```
 
-To run the examples, you can use Node.js. For instance, to run `logical.js`, use the command:
+To run the examples, you can use Node.js. For instance, to run `arrays.js`, use the command:
 ```
-node logical.js
-``` 
+node arrays.js
+```
