@@ -1,0 +1,17 @@
+node_modules
+dist
+.env
+.DS_Store
+.vscode
+.idea
+eslint.config.js
+.eslintrc.js
+.eslintrc.cjs
+.eslintrc.json
+.prettierrc
+.prettierrc.json
+.prettierrc.js
+.prettierrc.cjs
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
