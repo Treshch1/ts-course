@@ -1,0 +1,545 @@
+{
+	"info": {
+		"_postman_id": "ca3c07c3-0294-425e-8739-87866e06d232",
+		"name": "The Cats",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2614318"
+	},
+	"item": [
+		{
+			"name": "Get images",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const responseJson = pm.response.json()",
+							"pm.collectionVariables.set(\"image_id\", responseJson[0].id);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/images/search",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"images",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create vote",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const responseJson = pm.response.json()",
+							"",
+							"pm.test(\"Message is SUCCESS\", function () {",
+							"    pm.expect(responseJson.message).to.eql('SUCCESS');",
+							"});",
+							"",
+							"",
+							"pm.collectionVariables.set(\"vote_id\", responseJson.id);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"image_id\": \"{{image_id}}\",\n    \"value\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/votes",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"votes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get vote details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Vote id is correct\", function () {",
+							"    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get('vote_id'));",
+							"});",
+							"",
+							"pm.test(\"Image id is correct\", function () {",
+							"    pm.expect(jsonData.image_id).to.eql(pm.collectionVariables.get('image_id'));",
+							"});",
+							"",
+							"pm.test(\"Value is correct\", function () {",
+							"    pm.expect(jsonData.value).to.eql(5);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/votes/{{vote_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"votes",
+						"{{vote_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete vote",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Vote id is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"SUCCESS\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/votes/{{vote_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"votes",
+						"{{vote_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get non-existing vote details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Extract body from HTML\", function () {",
+							"    const bodyText = pm.response.text()",
+							"    pm.expect(bodyText).to.equal('NOT_FOUND')",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/votes/{{vote_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"votes",
+						"{{vote_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create favorite",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const responseJson = pm.response.json()",
+							"",
+							"pm.test(\"Message is SUCCESS\", function () {",
+							"    pm.expect(responseJson.message).to.eql('SUCCESS');",
+							"});",
+							"",
+							"",
+							"pm.collectionVariables.set(\"favorite_id\", responseJson.id);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"image_id\": \"{{image_id}}\",\n    \"sub_id\": \"{{user_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/favourites",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"favourites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List favorites",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Verify created favorite is in the list\", function () {",
+							"    pm.expect(pm.response.json().length).to.be.greaterThan(0);",
+							"    const createdFavoriteId = pm.collectionVariables.get('favorite_id');",
+							"    const jsonData = pm.response.json();",
+							"    const existingFavorites = jsonData.map(jsonData => jsonData.id);",
+							"    pm.expect(existingFavorites).to.include(createdFavoriteId);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/favourites",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"favourites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete favorite",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Vote id is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"SUCCESS\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{base_url}}/favourites/{{favorite_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"favourites",
+						"{{favorite_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List favorites",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Verify created favorite not is in the list\", function () {",
+							"    pm.expect(pm.response.json().length).to.be.greaterThan(0);",
+							"    const createdFavoriteId = pm.collectionVariables.get('favorite_id');",
+							"    const jsonData = pm.response.json();",
+							"    const existingFavorites = jsonData.map(jsonData => jsonData.id);",
+							"    pm.expect(existingFavorites).not.to.include(createdFavoriteId);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/favourites",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"favourites"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://api.thecatapi.com/v1"
+		},
+		{
+			"key": "token",
+			"value": "live_TorznPj3qO7J4teYV1qV3BI52vlt5cZ6uSdppJ1iIueydySUCDFeOVzCtiWlxaNi"
+		},
+		{
+			"key": "image_id",
+			"value": ""
+		},
+		{
+			"key": "vote_id",
+			"value": ""
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "favorite_id",
+			"value": ""
+		}
+	]
+}
