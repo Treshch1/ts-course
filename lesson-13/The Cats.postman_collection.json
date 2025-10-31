@@ -18,7 +18,8 @@
 							"});",
 							"",
 							"const responseJson = pm.response.json()",
-							"pm.collectionVariables.set(\"image_id\", responseJson[0].id);"
+							"pm.collectionVariables.set(\"image_id\", responseJson[0].id);",
+							"pm.collectionVariables.set(\"image_url\", responseJson[0].url);"
 						],
 						"type": "text/javascript",
 						"packages": {},
@@ -129,7 +130,11 @@
 							"});",
 							"",
 							"pm.test(\"Image id is correct\", function () {",
-							"    pm.expect(jsonData.image_id).to.eql(pm.collectionVariables.get('image_id'));",
+							"    pm.expect(jsonData.image.id).to.eql(pm.collectionVariables.get('image_id'));",
+							"});",
+							"",
+							"pm.test(\"Image url is correct\", function () {",
+							"    pm.expect(jsonData.image.url).to.eql(pm.collectionVariables.get('image_url'));",
 							"});",
 							"",
 							"pm.test(\"Value is correct\", function () {",
@@ -340,9 +345,13 @@
 							"pm.test(\"Verify created favorite is in the list\", function () {",
 							"    pm.expect(pm.response.json().length).to.be.greaterThan(0);",
 							"    const createdFavoriteId = pm.collectionVariables.get('favorite_id');",
+							"    const image_id = pm.collectionVariables.get('image_id');",
+							"    const image_url = pm.collectionVariables.get('image_url');",
 							"    const jsonData = pm.response.json();",
-							"    const existingFavorites = jsonData.map(jsonData => jsonData.id);",
-							"    pm.expect(existingFavorites).to.include(createdFavoriteId);",
+							"    const createdFavorite = jsonData.filter(jsonData => jsonData.id === Number(createdFavoriteId))[0];",
+							"    pm.expect(createdFavorite.image.id).to.equal(image_id)",
+							"    pm.expect(createdFavorite.image.url).to.equal(image_url)",
+							"    pm",
 							"});"
 						],
 						"type": "text/javascript",
@@ -444,7 +453,6 @@
 							"});",
 							"",
 							"pm.test(\"Verify created favorite not is in the list\", function () {",
-							"    pm.expect(pm.response.json().length).to.be.greaterThan(0);",
 							"    const createdFavoriteId = pm.collectionVariables.get('favorite_id');",
 							"    const jsonData = pm.response.json();",
 							"    const existingFavorites = jsonData.map(jsonData => jsonData.id);",
@@ -539,6 +547,10 @@
 		},
 		{
 			"key": "favorite_id",
+			"value": ""
+		},
+		{
+			"key": "image_url",
 			"value": ""
 		}
 	]
