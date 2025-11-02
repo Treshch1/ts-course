@@ -1,17 +1,9 @@
 import { ImageDto } from '../src/models/cats-api/image.dto';
-import { TheCatImagesApi, TheCatFavoritesApi, TheCatVotesApi } from '../src/apis/cats-api';
-import { ConfigService } from '../src/services/config.service';
-import { FetchApiService } from '../src/services/fetch-api.service';
 import { expect } from 'chai';
+import { ApiWorld } from '../src/api.world';
 
 describe('The Cat Api integration tests', () => {
-    const config = new ConfigService().getConfig();
-    const fetchApiService = new FetchApiService(config.api.catsApi.baseUrl, {
-        apiKey: config.auth.catsApi.apiKey
-    });
-    const imagesApi = new TheCatImagesApi(fetchApiService);
-    const votesApi = new TheCatVotesApi(fetchApiService);
-    const favoritesApi = new TheCatFavoritesApi(fetchApiService);
+    const world = new ApiWorld();
 
     let randomImage: ImageDto;
     let createdVoteId: number;
@@ -19,7 +11,7 @@ describe('The Cat Api integration tests', () => {
     const userId = 'my-user';
 
     it('should fetch random cat image', async () => {
-        const [response, data] = await imagesApi.getRandomImage();
+        const [response, data] = await world.catsImageApi.getRandomImage();
         randomImage = data[0];
 
         expect(response.ok).to.equal(true);
@@ -34,7 +26,7 @@ describe('The Cat Api integration tests', () => {
             image_id: randomImage.id,
             value: 1
         };
-        const [response, data] = await votesApi.createImageVote(voteData);
+        const [response, data] = await world.catsVotesApi.createImageVote(voteData);
 
         expect(response.ok).to.equal(true);
         expect(data).to.have.property('id');
@@ -45,7 +37,7 @@ describe('The Cat Api integration tests', () => {
     });
 
     it('should get vote details', async () => {
-        const [response, data] = await votesApi.getVoteDetails(createdVoteId);
+        const [response, data] = await world.catsVotesApi.getVoteDetails(createdVoteId);
 
         expect(response.ok).to.equal(true);
         expect(data).to.have.property('id', createdVoteId);
@@ -57,14 +49,14 @@ describe('The Cat Api integration tests', () => {
     });
 
     it('should delete vote', async () => {
-        const [response, data] = await votesApi.deleteVote(createdVoteId);
+        const [response, data] = await world.catsVotesApi.deleteVote(createdVoteId);
 
         expect(response.ok).to.equal(true);
         expect(data).to.have.property('message', 'SUCCESS');
     });
 
     it('should raise 404 when getting deleted vote details', async () => {
-        const [response, data] = await votesApi.getVoteDetails(createdVoteId, false);
+        const [response, data] = await world.catsVotesApi.getVoteDetails(createdVoteId, false);
 
         expect(response.status).to.equal(404);
         expect(data).to.equal('NOT_FOUND');
@@ -75,7 +67,7 @@ describe('The Cat Api integration tests', () => {
             image_id: randomImage.id,
             sub_id: userId
         };
-        const [response, data] = await favoritesApi.createFavorite(favoriteData);
+        const [response, data] = await world.catsFavoritesApi.createFavorite(favoriteData);
 
         expect(response.ok).to.equal(true);
         expect(data).to.have.property('message', 'SUCCESS');
@@ -84,7 +76,7 @@ describe('The Cat Api integration tests', () => {
     });
 
     it('should include created favorite in favorites list', async () => {
-        const [response, data] = await favoritesApi.getFavoritesList();
+        const [response, data] = await world.catsFavoritesApi.getFavoritesList();
         const createdFavorite = data.find((fav) => fav.id === createdFavoriteId);
 
         expect(response.ok).to.equal(true);
@@ -98,14 +90,14 @@ describe('The Cat Api integration tests', () => {
     });
 
     it('should delete favorite', async () => {
-        const [response, data] = await favoritesApi.deleteFavorite(createdFavoriteId);
+        const [response, data] = await world.catsFavoritesApi.deleteFavorite(createdFavoriteId);
 
         expect(response.ok).to.equal(true);
         expect(data).to.have.property('message', 'SUCCESS');
     });
 
     it('should not include deleted favorite in favorites list', async () => {
-        const [response, data] = await favoritesApi.getFavoritesList();
+        const [response, data] = await world.catsFavoritesApi.getFavoritesList();
         const deletedFavorite = data.find((fav) => fav.id === createdFavoriteId);
 
         expect(response.ok).to.equal(true);
