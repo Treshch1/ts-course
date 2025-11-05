@@ -21,8 +21,10 @@ test('XPath selectors', async ({ page }) => {
 test('Mixed selectors', async ({ page }) => {
     await page.goto('https://rozetka.com.ua/');
 
-    await page.locator('xpath=.//rz-section-tiles-block-best').isVisible();
-    await page.fill('input[data-testid="search-suggest-input"]', 'Ноутбуки');
+    await page.locator('xpath=//rz-section-tiles-block-best').isVisible();
+    const searchInput = page.locator('input[data-testid="search-suggest-input"]');
+    await searchInput.click();
+    await searchInput.fill('Ноутбуки');
     await page.click('//rz-search-suggest-content//a[contains(text(), " Ноутбуки ")]');
     expect(await page.locator('//h1[@class="catalog-heading"]').textContent()).toContain('Ноутбуки');
 });
@@ -37,11 +39,11 @@ test('Check cart button visibility using CSS selector', async ({ page }) => {
 test('Check login popup opens using XPath selector', async ({ page }) => {
     await page.goto('https://rozetka.com.ua/');
 
-    await page.locator('xpath=.//rz-section-tiles-block-best').isVisible();
+    await page.locator('xpath=//rz-section-tiles-block-best').isVisible();
     await page.click('//button[@data-testid="header-auth-btn"]');
-    const loginPopup = page.locator('xpath=.//rz-modal-layout');
-    const modalHeader = loginPopup.locator('xpath=..//h2');
-    const frameElement = loginPopup.frameLocator('xpath=..//iframe');
+    const loginPopup = page.locator('xpath=//rz-modal-layout');
+    const modalHeader = loginPopup.locator('xpath=.//h2');
+    const frameElement = loginPopup.frameLocator('xpath=.//iframe');
     const phoneInput = frameElement.locator('xpath=.//input[@data-qaid="phone"]');
     await expect(modalHeader).toHaveText('Вхід');
     await expect(phoneInput).toBeVisible();
