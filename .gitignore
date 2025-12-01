@@ -23,3 +23,5 @@ playwright/.cache/
 playwright/.auth/
 videos
 reports
+allure-results
+mochawesome-report
