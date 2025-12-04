@@ -12,7 +12,6 @@ eslint.config.js
 .prettierrc.json
 .prettierrc.js
 .prettierrc.cjs
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
 build
