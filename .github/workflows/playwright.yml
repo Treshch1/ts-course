@@ -1,0 +1,38 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: lts/*
+    
+    - name: Install dependencies
+      run: npm ci
+      working-directory: lesson-21
+    
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: lesson-21
+    
+    - name: Run Playwright tests
+      run: npm run test
+      working-directory: lesson-21
+    
+    - name: Generate Allure report
+      run: npx allure generate --output allure-report
+      working-directory: lesson-21
+
+    - name: Upload Allure report
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: lesson-21/allure-report
+        if-no-files-found: error
